@@ -1,0 +1,1 @@
+<h2>Searching the hotel</h2>
