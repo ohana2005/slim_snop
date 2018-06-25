@@ -6,3 +6,5 @@
 
 /vendor
 /logs
+
+/app/config/db.php

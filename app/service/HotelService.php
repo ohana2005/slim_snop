@@ -33,6 +33,10 @@ class HotelService extends BaseService
         return isset($this->_config[$name]) ? $this->_config[$name] : $default;
     }
 
+    public function getSkin() {
+        return $this->getConfig('skin', 'default');
+    }
+
     public function getHotel(){
         return $this->_hotel;
     }

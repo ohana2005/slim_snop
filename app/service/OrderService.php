@@ -9,7 +9,6 @@
 class OrderService extends BaseService
 {
     protected $_data = array();
-    public function init($args){
 
-    }
+
 }
