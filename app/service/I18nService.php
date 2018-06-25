@@ -19,7 +19,11 @@ class I18nService extends BaseService
 
     }
 
-    public function translate($key, $pairs = array()){
+    public function translate($key, $pairs = array(), $marker = false){
         return isset($this->_data[$key]) ? $this->_data[$key] : $key;
+    }
+
+    public function getLang(){
+        return $this->_lang;
     }
 }

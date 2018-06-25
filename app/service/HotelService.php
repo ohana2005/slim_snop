@@ -11,13 +11,15 @@ class HotelService extends BaseService
 
     protected $_config = null;
     protected $_hotel = null;
-    protected $_hotelid = null;
+    protected $_hotelId = null;
+    protected $_hotelSlug = null;
     public function init($name){
         try {
             $stmt = $this->db()->query("SELECT * FROM `hotel` WHERE `slug`='{$name}' LIMIT 1");
             $row = $stmt->fetch();
             $this->_hotel = $row;
-            $this->_hotelid = $row['id'];
+            $this->_hotelId = $row['id'];
+            $this->_hotelSlug = $name;
             $this->readConfig();
         }catch(Exception $e){
             throw new Exception("Undefined hotel $name");
@@ -35,9 +37,17 @@ class HotelService extends BaseService
         return $this->_hotel;
     }
 
+    public function getHotelId(){
+        return $this->_hotelId;
+    }
+
+    public function getHotelSlug(){
+        return $this->_hotelSlug;
+    }
+
     protected function readConfig(){
         $arr = array();
-        $stmt = $this->db()->query("SELECT * FROM `hotel_config` WHERE  `hotel_id` = {$this->_hotelid}");
+        $stmt = $this->db()->query("SELECT * FROM `hotel_config` WHERE  `hotel_id` = {$this->_hotelId}");
         while ($row = $stmt->fetch()) {
             switch ($row['datatype']) {
                 case 'enum':
