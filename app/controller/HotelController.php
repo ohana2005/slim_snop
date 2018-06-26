@@ -20,9 +20,12 @@ class HotelController extends BaseController
     {
         $this->container['service']->init($args);
         $this->container['search']->init($_GET);
+
+        $Rooms = $this->container['hotel']->findRooms();
         return $this->view('hotel/rooms.html.php', [
             'hotel' => $this->container['hotel']->getHotel(),
-            'search' => $this->container['search']->getDataValues()
+            'search' => $this->container['search']->getDataValues(),
+            'Rooms' => $Rooms
         ]);
     }
 

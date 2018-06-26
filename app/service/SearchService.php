@@ -54,6 +54,25 @@ class SearchService extends BaseService
         return $values;
     }
 
+    public function getPersonsCount(){
+        return $this->_data['a'] + $this->_data['c'];
+    }
+
+    public function getAdultsCount(){
+        return $this->_data['a'];
+    }
+
+    public function getChildrenCount(){
+        return $this->_data['c'];
+    }
+
+    public function getDateArrival(){
+        return $this->_data['arr'];
+    }
+
+    public function getDateDeparture(){
+        return $this->_data['dep'];
+    }
 
 
     protected function _session_persist() {
@@ -63,21 +82,6 @@ class SearchService extends BaseService
         $this->_data = !empty($_SESSION['snop_data']) ? $_SESSION['snop_data'] : [];
     }
 
-    public function __call($name, $arguments) {
-        if (strpos($name, 'set') === 0) {
-            $name = preg_replace('/^set/', '', $name);
-            $name = $this->_from_camel_case($name);
-            $this->_setValue($name, $arguments[0]);
-
-            return $this;
-        } elseif (strpos($name, 'get') === 0) {
-            $name = preg_replace('/^get/', '', $name);
-            $name = $this->_from_camel_case($name);
-
-            return $this->_data[$name];
-        }
-        throw new Exception("Method $name is undefined");
-    }
 
     public function __destruct() {
         $this->_session_persist();
@@ -87,6 +91,7 @@ class SearchService extends BaseService
         $calcNights = false;
         switch ($key){
             case 'dep':
+            case 'arr':
                 $value = date('Y-m-d', strtotime($value));
                 $calcNights = true;
                 break;
@@ -104,6 +109,27 @@ class SearchService extends BaseService
     public function calculateNights() {
         $nights = ceil((strtotime($this->_data['dep']) - strtotime($this->_data['arr'])) / 86400);
         $this->_data['n'] = $nights;
+    }
+
+    public function getDatesRange()
+    {
+        return $this->createDateRange($this->_data['arr'], $this->_data['dep']);
+    }
+
+    private function createDateRange($startDate, $endDate, $format = "Y-m-d")
+    {
+        $begin = new DateTime($startDate);
+        $end = new DateTime($endDate);
+
+        $interval = new DateInterval('P1D'); // 1 Day
+        $dateRange = new DatePeriod($begin, $interval, $end);
+
+        $range = [];
+        foreach ($dateRange as $date) {
+            $range[] = $date->format($format);
+        }
+
+        return $range;
     }
 
     private function _from_camel_case($input) {

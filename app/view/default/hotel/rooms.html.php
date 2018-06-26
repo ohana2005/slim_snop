@@ -25,4 +25,26 @@
             <a href="<?php echo snop_url('search'); ?>"><?php echo __('Change'); ?></a>
         </div>
     </nav>
+
+
+    <?php foreach($Rooms as $Item): ?>
+
+        <div class="card text-center room-card">
+            <div class="card-header">
+                <h4><?php echo $Item['room']['name']; ?></h4>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"><?php echo $Item['package']['name']; ?></h5>
+                <p class="card-text"><?php echo $Item['room']['description']; ?></p>
+                <p class="card-text">
+                    <?php echo $Item['price']['price']; ?>
+                    <?php echo cnfg('currency'); ?>
+                </p>
+            </div>
+            <div class="card-footer">
+                <a href="#" class="btn btn-primary">Book now!</a>
+            </div>
+        </div>
+
+    <?php endforeach; ?>
 </div>
