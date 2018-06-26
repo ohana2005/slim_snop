@@ -27,7 +27,7 @@
     </nav>
 
 
-    <?php foreach($Rooms as $Item): ?>
+    <?php foreach($Rooms as $key => $Item): ?>
 
         <div class="card text-center room-card">
             <div class="card-header">
@@ -42,7 +42,7 @@
                 </p>
             </div>
             <div class="card-footer">
-                <a href="#" class="btn btn-primary">Book now!</a>
+                <a href="<?php echo snop_url('roombook', ['key' => $key]); ?>" class="btn btn-primary">Book now!</a>
             </div>
         </div>
 

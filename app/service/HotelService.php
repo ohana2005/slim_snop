@@ -73,7 +73,7 @@ class HotelService extends BaseService
             foreach($availablePackages as $package) {
                 $price = $this->getRoomCategoryPrice($cat, $package);
                 if(!empty($price)){
-                    $priceItems[] = [
+                    $priceItems[$cat['id'] . '_' . $package['id']] = [
                         'room' => $cat,
                         'package' => $package,
                         'price' => $price
@@ -81,6 +81,7 @@ class HotelService extends BaseService
                 }
             }
         }
+
 
         return $priceItems;
 
@@ -170,6 +171,7 @@ class HotelService extends BaseService
                 $packages[$row['package_id']] = [
                     'name' => $row['package_name'],
                     'description' => $row['package_description'],
+                    'id' => $row['package_id'],
                     'items' => []
                 ];
             }

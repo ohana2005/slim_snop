@@ -6,8 +6,13 @@
  * Date: 6/25/18
  * Time: 17:20
  */
-class SearchService extends BaseService
+class SearchService extends BaseService implements SessionStorageInterface
 {
+    use SessionStorageTrait;
+    protected $_data = [];
+
+    protected $_session_name = 'snop_search_data';
+
     public function __construct($container)
     {
         parent::__construct($container);
@@ -72,19 +77,6 @@ class SearchService extends BaseService
 
     public function getDateDeparture(){
         return $this->_data['dep'];
-    }
-
-
-    protected function _session_persist() {
-        $_SESSION['snop_data'] = $this->_data;
-    }
-    protected function _read_session(){
-        $this->_data = !empty($_SESSION['snop_data']) ? $_SESSION['snop_data'] : [];
-    }
-
-
-    public function __destruct() {
-        $this->_session_persist();
     }
 
     protected function _setValue($key, $value){
