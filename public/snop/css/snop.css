@@ -5,3 +5,7 @@
 .snop-select-small{
     min-width: 50px;
 }
+
+.room-card{
+    margin: 10px 0;
+}

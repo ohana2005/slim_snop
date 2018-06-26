@@ -7,21 +7,21 @@
                 <div class="form-group">
                     <label for="snop_arrival_date"><?php echo __('Arrival date'); ?></label>
                     <input type="text" name="arr" class="form-control snop-datepicker" id="snop_arrival_date"
-                           placeholder="" value="<?php echo date('d.m.Y'); ?>">
+                           placeholder="" value="<?php echo $search['dateArrival']; ?>">
                 </div>
             </div>
             <div class="col-3">
                 <div class="form-group">
                     <label for="snop_departure_date"><?php echo __('Departure date'); ?></label>
                     <input type="text" name="dep" class="form-control snop-datepicker" id="snop_departure_date"
-                           placeholder="" value="<?php echo date('d.m.Y', time() + 60 * 60 * 24); ?>">
+                           placeholder="" value="<?php echo $search['dateDeparture']; ?>">
                 </div>
             </div>
             <div class="col-1">
                 <div class="form-group">
                     <label for="snop_adults"><?php echo __('Adults'); ?></label>
                     <select name="a" class="form-control snop-select-small" id="snop_adults">
-                        <?php echo form_adults(); ?>
+                        <?php echo form_adults($search['adultsCount']); ?>
                     </select>
                 </div>
             </div>
@@ -29,11 +29,17 @@
                 <div class="form-group">
                     <label for="snop_children"><?php echo __('Children'); ?></label>
                     <select name="c" class="form-control snop-select-small" id="snop_children">
-                        <?php echo form_children(); ?>
+                        <?php echo form_children($search['childrenCount']); ?>
                     </select>
+                </div>
+            </div>
+            <div class="col-1">
+                <div class="form-group">
+                    <label for="snop_children">&nbsp;</label>
+                <button type="submit" class="btn btn-primary"><?php echo __('Search'
+                    ); ?></button>
                 </div>
             </div>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary"><?php echo __('Search'); ?></button>
 </form>

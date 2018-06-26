@@ -1,17 +1,20 @@
 <?php
+
+    session_start();
+
     define('ROOT_DIR', dirname(__FILE__) . '/..');
     define('APP_DIR', ROOT_DIR . '/app');
+    define('CONFIG_DIR', APP_DIR . '/config');
     define('DEFAULT_LANG', 'ru');
 
+    require_once CONFIG_DIR . '/inc.php';
+    require_once CONFIG_DIR . '/db.php';
     use \Psr\Http\Message\ServerRequestInterface as Request;
     use \Psr\Http\Message\ResponseInterface as Response;
-    $config['displayErrorDetails'] = true;
-    $config['db']['host']   = '127.0.0.1';
-    $config['db']['user']   = 'root';
-    $config['db']['pass']   = '';
-    $config['db']['dbname'] = 'snop';
 
-    $app = new \Slim\App(['settings' => $config]);
+
+
+    $app = new \Slim\App(['settings' => $_config]);
 
     $container = $app->getContainer();
     $container['db'] = function ($c) {
@@ -24,9 +27,11 @@
     };
 
     $container['order'] = new OrderService($container);
+    $container['search'] = new SearchService($container);
     $container['hotel'] = new HotelService($container);
     $container['i18n'] = new I18nService($container);
     $container['service'] = new ServiceService($container);
+    $container['html'] = new HtmlService($container);
 
     require_once APP_DIR . '/routes.php';
     require_once APP_DIR . '/helper.php';

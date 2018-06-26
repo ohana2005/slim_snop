@@ -10,7 +10,7 @@ class BaseController
 {
     protected $container;
     protected $_view;
-    protected $_base = 'frame/base.php';
+    protected $_base = 'frame/base.html.php';
 
     public function __construct( \Slim\Container  $container) {
         $this->container = $container;
@@ -18,7 +18,8 @@ class BaseController
     }
 
     protected function view($template, $params = []){
-        $content = $this->_view->fetch('content/' . $template, $params);
-        return $this->_view->render($this->container['response'], $this->_base, array_merge(['content' => $content], $params));
+        $skin = $this->container['hotel']->getSkin();
+        $content = $this->_view->fetch($skin . '/' . $template, $params);
+        return $this->_view->render($this->container['response'], $skin . '/' . $this->_base, array_merge(['content' => $content], $params));
     }
 }
