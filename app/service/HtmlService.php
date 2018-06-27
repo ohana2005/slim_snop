@@ -13,6 +13,7 @@ class HtmlService extends BaseService
         return [
            '/bootstrap-4.1.1/css/bootstrap.min.css',
             '/gijgo-combined-1.9.6/css/gijgo.min.css',
+            '/fontawesome-5.1.0/css/all.css',
             '/snop/css/snop.css'
         ];
     }

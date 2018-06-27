@@ -37,8 +37,7 @@
                 <h5 class="card-title"><?php echo $Item['package']['name']; ?></h5>
                 <p class="card-text"><?php echo $Item['room']['description']; ?></p>
                 <p class="card-text">
-                    <?php echo $Item['price']['price']; ?>
-                    <?php echo cnfg('currency'); ?>
+                    <?php echo price($Item['price']['price']); ?>
                 </p>
             </div>
             <div class="card-footer">

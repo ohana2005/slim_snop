@@ -21,6 +21,7 @@ class HotelController extends BaseController
         $this->container['service']->init($args);
         $this->container['search']->init($_GET);
 
+
         $Rooms = $this->container['hotel']->findRooms();
         $this->container['order']->setRooms($Rooms);
         return $this->view('hotel/rooms.html.php', [
@@ -41,8 +42,15 @@ class HotelController extends BaseController
     {
         $this->container['service']->init($args);
         return $this->view('hotel/checkout.html.php', [
-            'hotel' => $this->container['hotel']->getHotel()
+            'hotel' => $this->container['hotel']->getHotel(),
+            'search' => $this->container['search']->getDataValues(),
+            'order' => $this->container['order']->getOrder()
         ]);
+    }
+
+    public function checkoutPost($request, $response, $args){
+        $this->container['service']->init($args);
+        $this->container['order']->create($_POST);
     }
 
     public function thank($request, $response, $args)

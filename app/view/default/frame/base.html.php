@@ -22,8 +22,10 @@
 
 
 </main><!-- /.container -->
-<footer class="container">
-    <?php echo cnfg('email'); ?>
+<footer class="footer">
+    <div class="container">
+        <span class="text-muted"><?php echo cnfg('email'); ?></span>
+    </div>
 </footer>
 
 <!-- Bootstrap core JavaScript

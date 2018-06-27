@@ -16,7 +16,8 @@ trait SessionStorageTrait
         $this->_data = !empty($_SESSION[$this->_session_name]) ? $_SESSION[$this->_session_name] : [];
     }
 
-    public function __destruct() {
-        $this->_session_persist();
+    public function getData(){
+        return $this->_data;
     }
+
 }

@@ -30,17 +30,15 @@ class SearchService extends BaseService implements SessionStorageInterface
         return true;
     }
 
-    public function getData(){
-        return $this->_data;
-    }
 
     public function getDataValues(){
         $_defaults = [
             'arr' => date('Y-m-d'),
-            'dep' => date('Y-m-d', strtotime(time() + 60 * 60 * 24)),
+            'dep' => date('Y-m-d', time() + 60 * 60 * 24),
             'a' => 1,
             'c' => 0,
-            'ca' => []
+            'ca' => [],
+            'n' => 1
         ];
         $values = [];
         $map = ['arr' => 'dateArrival', 'dep' => 'dateDeparture', 'c' => 'childrenCount', 'a' => 'adultsCount', 'ca' => 'childrenAge', 'n' => 'nights'];
@@ -131,5 +129,8 @@ class SearchService extends BaseService implements SessionStorageInterface
             $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
         }
         return implode('_', $ret);
+    }
+    public function __destruct() {
+        $this->_session_persist();
     }
 }

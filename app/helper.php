@@ -20,6 +20,10 @@
         return $container->get('router')->pathFor($name, $params);
     }
 
+    function price($value, $currency = true){
+        return number_format($value, 2, ',', '.') . ($currency ? ' ' . cnfg('currency') : '');
+    }
+
     function snop_url($name, $params = []){
         global $container;
         $lang = $container['i18n']->getLang();
