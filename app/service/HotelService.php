@@ -13,12 +13,14 @@ class HotelService extends BaseService
     protected $_hotel = null;
     protected $_hotelId = null;
     protected $_hotelSlug = null;
+    protected $_hotelApihash = null;
     public function init($name){
         try {
             $stmt = $this->db()->query("SELECT * FROM `hotel` WHERE `slug`='{$name}' LIMIT 1");
             $row = $stmt->fetch();
             $this->_hotel = $row;
             $this->_hotelId = $row['id'];
+            $this->_hotelApihash = $row['apihash'];
             $this->_hotelSlug = $name;
             $this->readConfig();
         }catch(Exception $e){
@@ -68,6 +70,7 @@ class HotelService extends BaseService
     public function findRooms() {
         $availableCategories = $this->getAvailableCategories();
         $availablePackages = $this->getAvailablePackages();
+
         $priceItems = [];
         foreach($availableCategories as $cat){
             foreach($availablePackages as $package) {
@@ -159,12 +162,20 @@ class HotelService extends BaseService
 
 
     public function getAvailablePackages(){
+        $adultsCount = $this->container['search']->getAdultsCount();
+        $childrenCount = $this->container['search']->getChildrenCount();
+        $nights = $this->container['search']->getNights();
         $packages = [];
         $query = "
             SELECT pi.*, p.name package_name, p.description package_description, p.id package_id FROM `package_item` pi
             JOIN `package_item2_package` pi2p ON pi2p.package_item_id = pi.id
             JOIN `package` p ON p.id = pi2p.package_id
-             WHERE pi.hotel_id = {$this->_hotelId}";
+             WHERE pi.hotel_id = {$this->_hotelId}
+             AND $adultsCount BETWEEN p.min_adults AND p.max_adults
+             AND $childrenCount BETWEEN p.min_children AND p.max_children
+             AND $nights BETWEEN p.min_stay AND p.max_stay
+             
+             ";
         $stmt = $this->db()->query($query);
         while($row = $stmt->fetch()){
             if(empty($packages[$row['package_id']])){
@@ -211,38 +222,58 @@ class HotelService extends BaseService
         }
 
         if(!$this->validatePriceRange($price_cat)){
+            $this->invalidRoomPriceAlert($category['id']);
             return $priceAll;
         }
 
         $price_package = [];
         foreach($package['items'] as $package_item){
             $modifier = 1;
-            if($package_item['per_adult']){
+            if ($package_item['per_person'] == 'adult') {
                 $modifier = $adultsCount;
-            }elseif($package_item['per_child']){
+            } elseif ($package_item['per_person'] == 'child') {
                 $modifier = $childrenCount;
+            } elseif($package_item['per_person'] == 'person'){
+                $modifier = $childrenCount + $adultsCount;
             }
-            if($modifier) {
-                $price_package[$package_item['id']] = $this->getRangeKeys($datesRange);
-                $query = "
+            if($package_item['per_period'] == 'day') {
+                if ($modifier) {
+                    $price_package[$package_item['id']] = $this->getRangeKeys($datesRange);
+                    $query = "
                     SELECT * FROM `price_item` pi WHERE 
                     pi.`package_item_id`={$package_item['id']}
                      AND pi.date BETWEEN '{$dateArrival}' AND '{$dateDeparture}'
                       order by pi.date
                 ";
-                $stmt = $this->db()->query($query);
-                while ($row = $stmt->fetch()) {
-                    foreach ($price_package[$package_item['id']] as $datekey => $val) {
-                        if ($row['date'] == $datekey) {
-                            if ($row['price']) {
-                                $price_package[$package_item['id']][$datekey] = $row['price'] * $modifier;
+                    $stmt = $this->db()->query($query);
+                    while ($row = $stmt->fetch()) {
+                        foreach ($price_package[$package_item['id']] as $datekey => $val) {
+                            if ($row['date'] == $datekey) {
+                                if ($row['price']) {
+                                    $price_package[$package_item['id']][$datekey] = $row['price'] * $modifier;
+                                }
                             }
                         }
                     }
+                    if (!$this->validatePriceRange($price_package[$package_item['id']])) {
+                        $this->invalidPackagePriceAlert($package['id'], $package_item['id']);
+                        return $priceAll;
+                    }
                 }
-                if (!$this->validatePriceRange($price_package[$package_item['id']])) {
+            }elseif($package_item['per_period'] == 'booking'){
+                $query = "
+                    SELECT * FROM `price_item` pi WHERE 
+                    pi.`package_item_id`={$package_item['id']}
+                     AND pi.date = '{$dateArrival}'
+                      LIMIT 1
+                ";
+                $stmt = $this->db()->query($query);
+                if($row = $stmt->fetch()){
+                    $price_package[$package_item['id']] = [$dateArrival => $row['price'] * $modifier];
+                }else{
                     return $priceAll;
                 }
+
             }
         }
 
@@ -285,6 +316,14 @@ class HotelService extends BaseService
             }
         }
         return true;
+    }
+
+    protected function invalidRoomPriceAlert($room_id){
+
+    }
+
+    protected function invalidPackagePriceAlert($package_id, $package_item_id){
+
     }
 
 }

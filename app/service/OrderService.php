@@ -52,7 +52,8 @@ class OrderService extends BaseService implements SessionStorageInterface
         $responseData = $this->container['api']->saveBooking([
            'order' => $orderData,
             'search' => $search,
-            'guest' => $data
+            'guest' => $data,
+            'summary' => $order['price']
         ]);
         print_r($responseData);die;
 

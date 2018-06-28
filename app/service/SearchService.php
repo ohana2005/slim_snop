@@ -76,6 +76,9 @@ class SearchService extends BaseService implements SessionStorageInterface
     public function getDateDeparture(){
         return $this->_data['dep'];
     }
+    public function getNights(){
+        return $this->_data['n'];
+    }
 
     protected function _setValue($key, $value){
         $calcNights = false;
