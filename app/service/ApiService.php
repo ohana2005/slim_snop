@@ -9,7 +9,7 @@
 class ApiService extends BaseService
 {
     public function saveBooking($data){
-        $url = "http://test.test/testjson.php";
+        $url = "http://snop.me/api.php/booking/create";
         $ch = curl_init($url);
         $authToken = 'Bearer ' . md5(microtime());
         curl_setopt_array($ch, array(

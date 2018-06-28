@@ -53,9 +53,13 @@ class OrderService extends BaseService implements SessionStorageInterface
            'order' => $orderData,
             'search' => $search,
             'guest' => $data,
-            'summary' => $order['price']
+            'summary' => $order['price'],
+            'hotel' => [
+                'id' => $this->container['hotel']->getHotelId(),
+                'apihash' => $this->container['hotel']->getHotelApihash()
+            ]
         ]);
-        print_r($responseData);die;
+        return $responseData;
 
 // Check for errors
 

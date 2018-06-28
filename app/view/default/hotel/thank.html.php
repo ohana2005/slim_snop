@@ -1,1 +1,1 @@
-<h2>Thank</h2>
+<h2>Thank you for your booking</h2>

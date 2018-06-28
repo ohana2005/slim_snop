@@ -50,7 +50,17 @@ class HotelController extends BaseController
 
     public function checkoutPost($request, $response, $args){
         $this->container['service']->init($args);
-        $this->container['order']->create($_POST);
+        $responseData = $this->container['order']->create($_POST['order']);
+        if($responseData['type'] == 'success'){
+            $args = array_merge($args, ['hash' => $responseData['bookingHash'], 'bookingId' => $responseData['bookingId']]);
+            return $response->withRedirect($this->container->get('router')->pathFor('thank', $args));
+        }else{
+            if($responseData['errorcode'] == 2){
+                return $response->withRedirect($this->container->get('router')->pathFor('error_occupied', $args));
+            }else{
+                return $response->withRedirect($this->container->get('router')->pathFor('error_technical', $args));
+            }
+        }
     }
 
     public function thank($request, $response, $args)

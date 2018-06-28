@@ -50,6 +50,9 @@ class HotelService extends BaseService
     public function getHotelSlug(){
         return $this->_hotelSlug;
     }
+    public function getHotelApihash(){
+        return $this->_hotelApihash;
+    }
 
     protected function readConfig(){
         $arr = array();
