@@ -1,5 +1,6 @@
-<h2>Thank you for your booking</h2>
+<h2><?php __('Your booking is complete'); ?></h2>
 
+<p><?php echo __('Thank you for your booking in hotel %hotel%', ['%hotel%' => $hotel['name']]); ?></p>
 <table class="table">
 
     <tbody>
