@@ -66,8 +66,13 @@ class HotelController extends BaseController
     public function thank($request, $response, $args)
     {
         $this->container['service']->init($args);
+        $Booking = $this->container['hotel']->getBooking($args['bookingId'], $args['hash']);
+        if(!$Booking){
+            return $response->withRedirect($this->container->get('router')->pathFor('error_technical', $args));
+        }
         return $this->view('hotel/thank.html.php', [
-            'hotel' => $this->container['hotel']->getHotel()
+            'hotel' => $this->container['hotel']->getHotel(),
+            'booking' => $Booking
         ]);
     }
 }

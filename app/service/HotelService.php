@@ -300,7 +300,20 @@ class HotelService extends BaseService
 
         return $priceAll;
 
+    }
 
+    public function getBooking($bookingId, $hash)
+    {
+        $query = "SELECT b.*, br.room_category_name, br.room_number, bp.package_name FROM `booking` b 
+            JOIN booking_room br on br.booking_id = b.id
+            JOIN booking_package bp on bp.booking_id = b.id
+          WHERE b.`id`={$bookingId}";
+        $stmt = $this->db()->query($query);
+        $row = $stmt->fetch();
+        if(!$row || $row['hotel_id'] != $this->_hotelId || $row['hash'] != $hash){
+            return false;
+        }
+        return $row;
 
     }
 

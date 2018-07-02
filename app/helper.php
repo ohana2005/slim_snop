@@ -14,6 +14,10 @@
         return $container['i18n']->translate($value, $pairs, $marker);
     }
 
+    function _date($date){
+        return date('d.m.Y', strtotime($date));
+    }
+
 
     function url($name, $params = []){
         global $container;
