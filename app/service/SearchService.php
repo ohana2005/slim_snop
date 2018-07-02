@@ -6,8 +6,13 @@
  * Date: 6/25/18
  * Time: 17:20
  */
-class SearchService extends BaseService
+class SearchService extends BaseService implements SessionStorageInterface
 {
+    use SessionStorageTrait;
+    protected $_data = [];
+
+    protected $_session_name = 'snop_search_data';
+
     public function __construct($container)
     {
         parent::__construct($container);
@@ -25,17 +30,15 @@ class SearchService extends BaseService
         return true;
     }
 
-    public function getData(){
-        return $this->_data;
-    }
 
     public function getDataValues(){
         $_defaults = [
             'arr' => date('Y-m-d'),
-            'dep' => date('Y-m-d', strtotime(time() + 60 * 60 * 24)),
+            'dep' => date('Y-m-d', time() + 60 * 60 * 24),
             'a' => 1,
             'c' => 0,
-            'ca' => []
+            'ca' => [],
+            'n' => 1
         ];
         $values = [];
         $map = ['arr' => 'dateArrival', 'dep' => 'dateDeparture', 'c' => 'childrenCount', 'a' => 'adultsCount', 'ca' => 'childrenAge', 'n' => 'nights'];
@@ -73,18 +76,8 @@ class SearchService extends BaseService
     public function getDateDeparture(){
         return $this->_data['dep'];
     }
-
-
-    protected function _session_persist() {
-        $_SESSION['snop_data'] = $this->_data;
-    }
-    protected function _read_session(){
-        $this->_data = !empty($_SESSION['snop_data']) ? $_SESSION['snop_data'] : [];
-    }
-
-
-    public function __destruct() {
-        $this->_session_persist();
+    public function getNights(){
+        return $this->_data['n'];
     }
 
     protected function _setValue($key, $value){
@@ -139,5 +132,8 @@ class SearchService extends BaseService
             $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
         }
         return implode('_', $ret);
+    }
+    public function __destruct() {
+        $this->_session_persist();
     }
 }

@@ -32,6 +32,7 @@
     $container['i18n'] = new I18nService($container);
     $container['service'] = new ServiceService($container);
     $container['html'] = new HtmlService($container);
+    $container['api'] = new ApiService($container);
 
     require_once APP_DIR . '/routes.php';
     require_once APP_DIR . '/helper.php';

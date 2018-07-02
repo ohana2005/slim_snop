@@ -14,10 +14,18 @@
         return $container['i18n']->translate($value, $pairs, $marker);
     }
 
+    function _date($date){
+        return date('d.m.Y', strtotime($date));
+    }
+
 
     function url($name, $params = []){
         global $container;
         return $container->get('router')->pathFor($name, $params);
+    }
+
+    function price($value, $currency = true){
+        return number_format($value, 2, ',', '.') . ($currency ? ' ' . cnfg('currency') : '');
     }
 
     function snop_url($name, $params = []){

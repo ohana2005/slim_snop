@@ -27,7 +27,7 @@
     </nav>
 
 
-    <?php foreach($Rooms as $Item): ?>
+    <?php foreach($Rooms as $key => $Item): ?>
 
         <div class="card text-center room-card">
             <div class="card-header">
@@ -37,12 +37,11 @@
                 <h5 class="card-title"><?php echo $Item['package']['name']; ?></h5>
                 <p class="card-text"><?php echo $Item['room']['description']; ?></p>
                 <p class="card-text">
-                    <?php echo $Item['price']['price']; ?>
-                    <?php echo cnfg('currency'); ?>
+                    <?php echo price($Item['price']['price']); ?>
                 </p>
             </div>
             <div class="card-footer">
-                <a href="#" class="btn btn-primary">Book now!</a>
+                <a href="<?php echo snop_url('roombook', ['key' => $key]); ?>" class="btn btn-primary">Book now!</a>
             </div>
         </div>
 
