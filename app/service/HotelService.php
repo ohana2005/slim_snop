@@ -72,7 +72,9 @@ class HotelService extends BaseService
 
     public function findRooms() {
         $availableCategories = $this->getAvailableCategories();
+
         $availablePackages = $this->getAvailablePackages();
+
 
         $priceItems = [];
         foreach($availableCategories as $cat){
@@ -88,12 +90,12 @@ class HotelService extends BaseService
             }
         }
 
-
         return $priceItems;
 
     }
 
     public function getAvailableCategories() {
+        $lang = $this->container['i18n']->getLang();
         $adultsCount = $this->container['search']->getAdultsCount();
         $childrenCount = $this->container['search']->getChildrenCount();
         $personsCount = $this->container['search']->getPersonsCount();
@@ -101,8 +103,9 @@ class HotelService extends BaseService
         $dateDeparture = $this->container['search']->getDateDeparture();
         $fitting_rooms = [];
         $query = "
-            SELECT r.*, rc.name, rc.description FROM `room` r
+            SELECT r.*, rct.name, rct.description FROM `room` r
             JOIN `room_category` rc ON r.room_category_id = rc.id
+            LEFT JOIN `room_category_translation` rct ON rct.id = rc.id AND rct.lang = '$lang'
             WHERE $personsCount BETWEEN rc.min_persons AND rc.max_persons
             AND rc.hotel_id = {$this->_hotelId}
         ";
@@ -165,14 +168,16 @@ class HotelService extends BaseService
 
 
     public function getAvailablePackages(){
+        $lang = $this->container['i18n']->getLang();
         $adultsCount = $this->container['search']->getAdultsCount();
         $childrenCount = $this->container['search']->getChildrenCount();
         $nights = $this->container['search']->getNights();
         $packages = [];
         $query = "
-            SELECT pi.*, p.name package_name, p.description package_description, p.id package_id FROM `package_item` pi
+            SELECT pi.*, pt.name package_name, pt.description package_description, p.id package_id FROM `package_item` pi
             JOIN `package_item2_package` pi2p ON pi2p.package_item_id = pi.id
             JOIN `package` p ON p.id = pi2p.package_id
+            LEFT JOIN `package_translation` pt ON pt.id = p.id AND pt.lang = '$lang'
              WHERE pi.hotel_id = {$this->_hotelId}
              AND $adultsCount BETWEEN p.min_adults AND p.max_adults
              AND $childrenCount BETWEEN p.min_children AND p.max_children
