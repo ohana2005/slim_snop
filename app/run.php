@@ -9,7 +9,12 @@
     define('DEFAULT_LANG', 'ru');
 
     require_once CONFIG_DIR . '/inc.php';
-    require_once CONFIG_DIR . '/db.php';
+    if(file_exists(CONFIG_DIR . '/env.php')){
+        require_once CONFIG_DIR . '/env.php';
+    }else{
+        require_once CONFIG_DIR . '/env.dist.php';
+    }
+
     use \Psr\Http\Message\ServerRequestInterface as Request;
     use \Psr\Http\Message\ResponseInterface as Response;
 

@@ -77,3 +77,8 @@
         }
         echo $str;
     }
+
+    function gallery_path($image, $type = 'small')
+    {
+        return IMAGE_HOST . '/room_gallery/' . $image['image'] . '.' . $type;
+    }
