@@ -65,7 +65,7 @@
             $strcss .= "<link href=\"$path\" type=\"text/css\" rel=\"stylesheet\">";
         }
         $skin = $container['hotel']->getSkin();
-        $skinpath = "/css/$skin/skin.css";
+        $skinpath = "/skin/$skin/skin.css";
         $strcss .= "<link href=\"$skinpath\" type=\"text/css\" rel=\"stylesheet\">";
         echo $strcss;
     }

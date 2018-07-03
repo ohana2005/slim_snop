@@ -25,6 +25,7 @@
                     </select>
                 </div>
             </div>
+            <?php if(cnfg('children_enabled')): ?>
             <div class="col-1">
                 <div class="form-group">
                     <label for="snop_children"><?php echo __('Children'); ?></label>
@@ -33,6 +34,7 @@
                     </select>
                 </div>
             </div>
+            <?php endif; ?>
             <div class="col-1">
                 <div class="form-group">
                     <label for="snop_children">&nbsp;</label>

@@ -17,7 +17,12 @@
 <body>
 
 <main role="main" class="container">
-    <h1><?php echo $hotel['name']; ?></h1>
+    <div class="row header">
+        <div class="col-2">
+            <img class="logo" src="<?php echo cnfg('hotel_logo') ?>" >
+        </div>
+        <div class="col text-muted"><h2><?php echo cnfg('hotel_name') ?></h2></div>
+    </div>
     <?php echo $content; ?>
 
 
@@ -25,6 +30,10 @@
 <footer class="footer">
     <div class="container">
         <span class="text-muted"><?php echo cnfg('email'); ?></span>
+        |
+        <span class="text-muted"><?php echo cnfg('telephone'); ?></span>
+        |
+        <span class="text-muted"><?php echo cnfg('address'); ?></span>
     </div>
 </footer>
 
