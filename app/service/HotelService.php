@@ -150,7 +150,8 @@ class HotelService extends BaseService
                         'description' => $f_room['description'],
                         'id' => $f_room['room_category_id'],
                         'rooms' => [[$f_room['id'], $f_room['number']]],
-                        'count' => 1
+                        'count' => 1,
+                        'gallery' => $this->getGallery($f_room['room_category_id'])
                     ];
                 }else{
                     $rooms[$f_room['room_category_id']]['count']++;
@@ -162,8 +163,17 @@ class HotelService extends BaseService
 
         return $rooms;
 
+    }
 
-
+    public function getGallery($room_category_id)
+    {
+        $gallery = [];
+        $query = "SELECT * FROM `room_gallery` WHERE `room_category_id` = $room_category_id";
+        $stmt = $this->db()->query($query);
+        while($row = $stmt->fetch()){
+            $gallery[] = $row;
+        }
+        return $gallery;
     }
 
 
