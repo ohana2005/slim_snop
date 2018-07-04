@@ -1,0 +1,11 @@
+.logo{
+    max-height: 100px;
+}
+
+.header{
+    padding-bottom: 20px;
+}
+.header h2{
+    position: relative;
+    top: 25px;
+}
