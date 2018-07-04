@@ -3,6 +3,8 @@
     session_start();
 
     define('ROOT_DIR', dirname(__FILE__) . '/..');
+    define('PUBLIC_DIR', ROOT_DIR . '/public');
+    define('PUBLIC_CACHE_DIR', PUBLIC_DIR . '/cache');
     define('CACHE_DIR', ROOT_DIR . '/cache');
     define('APP_DIR', ROOT_DIR . '/app');
     define('CONFIG_DIR', APP_DIR . '/config');
