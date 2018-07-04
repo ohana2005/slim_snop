@@ -60,22 +60,40 @@
 
     function include_css(){
         global $container;
-        $strcss = "";
-        foreach($container['html']->getBaseCss() as $path){
-            $strcss .= "<link href=\"$path\" type=\"text/css\" rel=\"stylesheet\">";
+        $hash = sha1(md5($container['hotel']->getHotelId()));
+        $filename = $hash . '.css';
+        $filepath = PUBLIC_CACHE_DIR . '/css/' . $filename;
+        if(!file_exists($filepath)){
+            $strcss = "";
+            foreach($container['html']->getBaseCss() as $path) {
+                $strcss .= $container['html']->getCssString($path);
+                $strcss .= "\n";
+            }
+            $skin = $container['hotel']->getSkin();
+            $skinpath = "/skin/$skin/skin.css";
+            $strcss .= file_get_contents(PUBLIC_DIR . $skinpath);
+            $strcss .= "\n";
+            $strcss .= $container['hotel']->getConfig('css', '');
+            file_put_contents($filepath, $strcss);
         }
-        $skin = $container['hotel']->getSkin();
-        $skinpath = "/skin/$skin/skin.css";
-        $strcss .= "<link href=\"$skinpath\" type=\"text/css\" rel=\"stylesheet\">";
-        echo $strcss;
+        echo "<link rel='stylesheet' type='text/css' href='/cache/css/$filename' >";
     }
     function include_js(){
         global $container;
-        $str = "";
-        foreach($container['html']->getBaseJs() as $path){
-            $str .= "<script src=\"$path\" type=\"text/javascript\"></script>";
+        $hash = sha1(sha1(md5($container['hotel']->getHotelId())));
+        $filename = $hash . '.js';
+        $filepath = PUBLIC_CACHE_DIR . '/js/' . $filename;
+        if(!file_exists($filepath)){
+            $str = "(function(version){";
+            foreach($container['html']->getBaseJs() as $path){
+                $str .= file_get_contents(PUBLIC_DIR . $path);
+                $str .= "\n";
+            }
+            $str .= "})('Version 0.8.1');";
+            file_put_contents($filepath, $str);
         }
-        echo $str;
+
+        echo "<script type='text/javascript' src='/cache/js/$filename'></script>";
     }
 
     function gallery_path($image, $type = 'small')

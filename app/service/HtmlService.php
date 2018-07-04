@@ -20,10 +20,21 @@ class HtmlService extends BaseService
 
     public function getBaseJs(){
         return [
-          '//code.jquery.com/jquery-3.3.1.slim.min.js',
+          '/jquery/jquery-3.3.1.slim.min.js',
             '/bootstrap-4.1.1/js/bootstrap.min.js',
             '/gijgo-combined-1.9.6/js/gijgo.min.js',
             '/snop/js/snop.js'
         ];
+    }
+
+    public function getCssString($path){
+        $info = pathinfo($path);
+        $dirname = explode('/', $info['dirname']);
+        array_pop($dirname);
+        $dirname = join('/', $dirname);
+        $path = PUBLIC_DIR . $path;
+        $strCss = file_get_contents($path);
+        $strCss = str_replace('url(../', 'url(' . $dirname . '/', $strCss);
+        return $strCss;
     }
 }

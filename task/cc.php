@@ -16,3 +16,4 @@ while($f = readdir($dir)){
 
 echo "Deleted files: \n";
 echo join("\n", $summary);
+echo "\n";

@@ -9,3 +9,5 @@
 
 /app/config/env.php
 /cache
+
+/public/cache
