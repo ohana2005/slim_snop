@@ -64,16 +64,7 @@
         $filename = $hash . '.css';
         $filepath = PUBLIC_CACHE_DIR . '/css/' . $filename;
         if(!file_exists($filepath)){
-            $strcss = "";
-            foreach($container['html']->getBaseCss() as $path) {
-                $strcss .= $container['html']->getCssString($path);
-                $strcss .= "\n";
-            }
-            $skin = $container['hotel']->getSkin();
-            $skinpath = "/skin/$skin/skin.css";
-            $strcss .= file_get_contents(PUBLIC_DIR . $skinpath);
-            $strcss .= "\n";
-            $strcss .= $container['hotel']->getConfig('css', '');
+            $strcss = $container['html']->getCssCompiledString();
             file_put_contents($filepath, $strcss);
         }
         echo "<link rel='stylesheet' type='text/css' href='/cache/css/$filename' >";
@@ -84,12 +75,7 @@
         $filename = $hash . '.js';
         $filepath = PUBLIC_CACHE_DIR . '/js/' . $filename;
         if(!file_exists($filepath)){
-            $str = "(function(version){";
-            foreach($container['html']->getBaseJs() as $path){
-                $str .= file_get_contents(PUBLIC_DIR . $path);
-                $str .= "\n";
-            }
-            $str .= "})('Version 0.8.1');";
+            $str = $container['html']->getJsCompiledString();
             file_put_contents($filepath, $str);
         }
 
@@ -99,4 +85,8 @@
     function gallery_path($image, $type = 'small')
     {
         return IMAGE_HOST . '/room_gallery/' . $image['image'] . '.' . $type;
+    }
+
+    function host($lastSlash = '/'){
+        return '//' . $_SERVER['HTTP_HOST'] . $lastSlash;
     }

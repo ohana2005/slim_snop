@@ -1,5 +1,9 @@
 <?php
 
+    if(!empty($_GET['sessid'])){
+        session_id($_GET['sessid']);
+    }
+
     session_start();
 
     define('ROOT_DIR', dirname(__FILE__) . '/..');
