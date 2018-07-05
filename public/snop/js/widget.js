@@ -10,7 +10,11 @@ SnopWidget = {
         this.$root = $('#snop_widget');
 
         this.addCss();
-        this.process();
+        var _this = this;
+        setTimeout(function(){
+            _this.process();
+        }, 1000);
+
     },
     _call: function(url){
         var _this = this;
