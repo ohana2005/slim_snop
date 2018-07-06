@@ -22,7 +22,7 @@
             <span class="snop-bold-value"><?php echo $search['childrenCount']; ?></span>
         </div>
         <div class=" col">
-            <a href="<?php echo snop_url('search'); ?>"><?php echo __('Change'); ?></a>
+            <a href="<?php echo snop_url('search'); ?>" id="snop_link_search"><?php echo __('Change'); ?></a>
         </div>
     </nav>
 

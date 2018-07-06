@@ -35,6 +35,8 @@ class HtmlService extends BaseService
         if($this->widgetMode){
             $js[] = '/snop/js/widget_utils.js';
             $js[] = '/snop/js/widget.js';
+        }else{
+            $js[] = '/snop/js/standalone.js';
         }
         return $js;
     }
