@@ -19,12 +19,6 @@ SnopWidget = {
         this.initBackButton();
 
     },
-    _call: function(url){
-        var _this = this;
-        $.get(this.url(url), function(resp){
-            _this.processJSON(resp);
-        });
-    },
     urlParam: function(name){
         try {
             var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -61,34 +55,48 @@ SnopWidget = {
             }, 500);
         }
     },
+    ajax: function(url, method, params, callback){
+        var _this = this;
+        var obj = {
+            cache: false,
+            crossDomain: true,
+            type: method,
+            url: url,
+            success: function(resp){
+                try{
+                    _this.processJson(resp);
+                }catch(e){
+                    _this.$root.html(resp);
+
+                    //  _this.promoteStep();
+                    _this.processHtml();
+                    if(callback){
+                        callback(_this, resp);
+                    }
+
+                }
+            },
+            error: function(){
+                alert('Unexpected connection error');
+            }
+        };
+        if(method == 'POST' && params){
+            obj.data = params;
+        }
+        $.ajax(obj);
+    },
     process: function(){
         var _this = this;
         _this.getStepAndParamsFromHash();
-        if(this.routes[_this.step]){
-            $.ajax({
-                cache: false,
-                crossDomain: true,
-                type: 'GET',
-                url: _this.url(this.routes[_this.step]),
-                success: function(resp){
-                    try{
-                        _this.processJSON(resp);
-                    }catch(e){
-                        _this.$root.html(resp);
-
-                      //  _this.promoteStep();
-                        if(typeof _this.Callback[_this.step] == 'function'){
-                            _this.Callback[_this.step](_this, resp);
-                        }
-                    }
-                },
-                error: function(){
-                    alert('Unexpected connection error');
-                }
-            });
+        if(_this.routes[_this.step]){
+            var callback;
+            if(typeof _this.Callback[_this.step] == 'function'){
+                callback = _this.Callback[_this.step];
+            }
+            _this.ajax(_this.url(_this.routes[_this.step]), 'GET', {}, callback);
             _this.checkScroll();
         }else{
-            alert('Undefined step ' + step);
+            alert('Undefined step ' + _this.step);
         }
     },
     goTo: function(step, params){
@@ -117,21 +125,40 @@ SnopWidget = {
             console.log(e);
         }
     },
-    processJSON: function(resp){
-        var json = typeof resp == 'object' ? resp : $.parseJSON(resp);
-        var hashParams = this.extractHashparams(json);
-        if(json.type == 'step'){
-            var step = json.booking_id ? json.step + '-' + json.booking_id : json.step;
-            if(hashParams){
-                step += hashParams;
-            }
-            this.setStep(step);
-            this.process();
-        }else if(json.type == 'location'){
-            document.location.href = json.location;
-        }else{
-            alert('Unrecognized type ' + json.type);
+    processJson: function(json){
+        if(typeof json != 'object'){
+            json = $.parseJSON(json);
         }
+        if(json.step){
+            this.goTo(json.step, json.params);
+        }else if(json.error){
+            alert(json.error);
+        }
+    },
+    processHtml: function(){
+        var _this = this;
+        var NOPARAMS = true;
+        this.$root.find('.snop-process-html:not(.snop-processed)').each(function(){
+            if($(this).data('step')){
+                $(this).click(function(){
+
+                    _this.goTo($(this).data('step'), $(this).data('params'));
+                    return false;
+                });
+            }else if($(this).data('ajax') == 'link'){
+                $(this).click(function(){
+                    _this.ajax(_this.url(this.href,NOPARAMS ), 'GET');
+                   return false;
+                });
+            }else if($(this).data('ajax') == 'form'){
+                $(this).submit(function(){
+                    var data = $(this).serialize();
+                    _this.ajax(_this.url(this.action, NOPARAMS), 'POST', data);
+                    return false;
+                });
+            }
+            $(this).addClass('snop-processed');
+        });
     },
     extractHashparams: function(json){
         var map = {
@@ -178,10 +205,10 @@ SnopWidget = {
             this.temp_step = null;
         }
     },
-    url: function(url){
+    url: function(url, noparams){
         var glue = url.indexOf('?') == -1 ? '?' : '&';
         var params = 'mode=widget';
-        if(this.params){
+        if(this.params && !noparams){
             params += '&' + this.params;
         }
         if(this.sessid){
@@ -213,7 +240,7 @@ SnopWidget = {
         },
         rooms: function(_this, resp){
             SnopBooking.init_rooms();
-            
+
             $('#snop_link_search').click(function(){
                _this.goTo('search');
                return false;

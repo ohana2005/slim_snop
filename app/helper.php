@@ -32,7 +32,7 @@
         global $container;
         $lang = $container['i18n']->getLang();
         $slug = $container['hotel']->getHotelSlug();
-        return url($name, array_merge(['hotel' => $slug, 'lang' => $lang], $params));
+        return host('') . url($name, array_merge(['hotel' => $slug, 'lang' => $lang], $params));
     }
 
 
@@ -60,8 +60,7 @@
 
     function include_css(){
         global $container;
-        $hash = sha1(md5($container['hotel']->getHotelId()));
-        $filename = $hash . '.css';
+        $filename = $container['html']->makeFilenameCss();
         $filepath = PUBLIC_CACHE_DIR . '/css/' . $filename;
         if(!file_exists($filepath)){
             $strcss = $container['html']->getCssCompiledString();
@@ -71,8 +70,7 @@
     }
     function include_js(){
         global $container;
-        $hash = sha1(sha1(md5($container['hotel']->getHotelId())));
-        $filename = $hash . '.js';
+        $filename = $container['html']->makeFilenameJs();
         $filepath = PUBLIC_CACHE_DIR . '/js/' . $filename;
         if(!file_exists($filepath)){
             $str = $container['html']->getJsCompiledString();

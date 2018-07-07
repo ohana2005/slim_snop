@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Online booking</title>
+    <title><?php echo __('Online booking'); ?></title>
 
     <!-- Bootstrap core CSS -->
     <?php include_css(); ?>
@@ -14,7 +14,7 @@
 
 </head>
 
-<body>
+<body class="snop-booking-body">
 
 <main role="main" class="container">
     <div class="row header">

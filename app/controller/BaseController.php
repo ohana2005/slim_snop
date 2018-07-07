@@ -10,12 +10,14 @@ class BaseController
 {
     protected $container;
     protected $_view;
+    protected $_is_widget = false;
     protected $_base = 'frame/base.html.php';
 
     public function __construct( \Slim\Container  $container) {
         $this->container = $container;
         $this->_view = new \Slim\Views\PhpRenderer(APP_DIR . '/view/');
         if(!empty($_GET['mode']) && $_GET['mode'] == 'widget'){
+            $this->_is_widget = true;
             $this->_base = 'frame/widget.html.php';
         }
     }
@@ -28,5 +30,9 @@ class BaseController
 
     protected function viewRaw($template, $params = []){
         return $this->_view->fetch( $template, $params);
+    }
+
+    protected function isWidget(){
+        return $this->_is_widget;
     }
 }

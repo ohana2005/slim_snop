@@ -6,6 +6,7 @@
 
     session_start();
 
+    header('Access-Control-Allow-Origin: *');
     define('ROOT_DIR', dirname(__FILE__) . '/..');
     define('PUBLIC_DIR', ROOT_DIR . '/public');
     define('PUBLIC_CACHE_DIR', PUBLIC_DIR . '/cache');

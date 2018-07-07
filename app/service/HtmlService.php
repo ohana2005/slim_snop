@@ -9,6 +9,7 @@
 class HtmlService extends BaseService
 {
     protected $widgetMode = false;
+    protected $lessc;
 
     public function setWidgetMode($mode)
     {
@@ -17,12 +18,18 @@ class HtmlService extends BaseService
 
     public function getBaseCss()
     {
-        return [
-           '/bootstrap-4.1.1/css/bootstrap.min.css',
+        $css = [
+           '/bootstrap-4.1.1/css/bootstrap.snop.css',
             '/gijgo-combined-1.9.6/css/gijgo.min.css',
-            '/fontawesome-5.1.0/css/all.css',
+            '/fontawesome-5.1.0/css/all.snop.css',
             '/snop/css/snop.css'
         ];
+        if($this->widgetMode){
+            $css[] = '/snop/css/widget.css';
+        }else{
+            $css[] = '/snop/css/standalone.css';
+        }
+        return $css;
     }
 
     public function getBaseJs(){
@@ -72,6 +79,7 @@ class HtmlService extends BaseService
         $path = PUBLIC_DIR . $path;
         $strCss = file_get_contents($path);
         $strCss = str_replace('url(../', 'url(' . $dirname . '/', $strCss);
+        $strCss = str_replace("url('../", "url('" . $dirname . '/', $strCss);
         return $strCss;
     }
 
@@ -88,5 +96,25 @@ class HtmlService extends BaseService
         $strcss .= "\n";
         $strcss .= $this->container['hotel']->getConfig('css', '');
         return $strcss;
+    }
+
+    public function getLessc(){
+        if(!$this->lessc){
+            $this->lessc = new lessc();
+        }
+        return $this->lessc;
+    }
+
+    public function wrapCss($css){
+        $css = ".snop-booking-body{\n" . $css . "\n }";
+        return $this->getLessc()->compile($css);
+    }
+
+    public function makeFilenameCss($widget = false){
+        return ($widget ? 'widget_' : '') . sha1(md5($this->container['hotel']->getHotelId())) . '.css';
+    }
+
+    public function makeFilenameJs($widget = false){
+        return ($widget ? 'widget_' : '') . sha1(sha1(md5($this->container['hotel']->getHotelId()))) . '.js';
     }
 }
