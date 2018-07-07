@@ -1,6 +1,6 @@
 <h2>Searching the hotel</h2>
 
-<form method="get" action="<?php echo snop_url('rooms'); ?>">
+<form method="get" action="<?php echo snop_url('rooms'); ?>" id="snop_search_form">
     <div class="container">
         <div class="row">
             <div class="col-3">
@@ -38,7 +38,7 @@
             <div class="col-1">
                 <div class="form-group">
                     <label for="snop_children">&nbsp;</label>
-                <button type="submit" class="btn btn-primary"><?php echo __('Search'
+                <button type="submit" class="btn btn-primary" id="snop_search_button"><?php echo __('Search'
                     ); ?></button>
                 </div>
             </div>

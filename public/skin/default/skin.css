@@ -1,11 +1,11 @@
-.logo{
+.snop-booking-body .logo{
     max-height: 100px;
 }
 
-.header{
+.snop-booking-body .header{
     padding-bottom: 20px;
 }
-.header h2{
+.snop-booking-body .header h2{
     position: relative;
     top: 25px;
 }

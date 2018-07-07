@@ -34,8 +34,7 @@ class HotelController extends BaseController
     public function roombook($request, $response, $args){
         $this->container['service']->init($args);
         $this->container['order']->addToOrder($args['key']);
-
-        return $response->withRedirect($this->container->get('router')->pathFor('checkout', $args));
+        return $this->snopGoTo($response, 'checkout', $args);
     }
 
     public function checkout($request, $response, $args)
@@ -52,13 +51,12 @@ class HotelController extends BaseController
         $this->container['service']->init($args);
         $responseData = $this->container['order']->create($_POST['order']);
         if($responseData['type'] == 'success'){
-            $args = array_merge($args, ['hash' => $responseData['bookingHash'], 'bookingId' => $responseData['bookingId']]);
-            return $response->withRedirect($this->container->get('router')->pathFor('thank', $args));
+            return $this->snopGoTo($response, 'thank', $args, ['hash' => $responseData['bookingHash'], 'bookingId' => $responseData['bookingId']]);
         }else{
             if($responseData['errorcode'] == 2){
-                return $response->withRedirect($this->container->get('router')->pathFor('error_occupied', $args));
+                return $this->snopGoTo($response, 'error_occupied', $args);
             }else{
-                return $response->withRedirect($this->container->get('router')->pathFor('error_technical', $args));
+                return $this->snopGoTo($response, 'error_technical', $args);
             }
         }
     }
@@ -66,7 +64,7 @@ class HotelController extends BaseController
     public function thank($request, $response, $args)
     {
         $this->container['service']->init($args);
-        $Booking = $this->container['hotel']->getBooking($args['bookingId'], $args['hash']);
+        $Booking = $this->container['hotel']->getBooking($_GET['bookingId'], $_GET['hash']);
         if(!$Booking){
             return $response->withRedirect($this->container->get('router')->pathFor('error_technical', $args));
         }
@@ -74,5 +72,20 @@ class HotelController extends BaseController
             'hotel' => $this->container['hotel']->getHotel(),
             'booking' => $Booking
         ]);
+    }
+
+
+    protected function snopGoTo($response, $step, $args, $params = []){
+        if($this->isWidget()){
+            return $response->withStatus(200)
+                ->withHeader('Content-Type', 'application/json')
+                ->write(json_encode([
+                    'step' => $step,
+                    'params' => http_build_query($params)
+                ]));
+        }else{
+            $sParams = !empty($params) ? '?' . http_build_query($params) : '';
+            return $response->withRedirect($this->container->get('router')->pathFor($step, $args) . $sParams);
+        }
     }
 }

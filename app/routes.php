@@ -8,5 +8,7 @@ $app->get('/checkout/{hotel}/{lang}', \HotelController::class . ':checkout')->se
 $app->post('/checkout/{hotel}/{lang}', \HotelController::class . ':checkoutPost');
 $app->get('/error/occupied/{hotel}/{lang}', \ErrorController::class . ':occupied')->setName('error_occupied');
 $app->get('/error/technical/{hotel}/{lang}', \ErrorController::class . ':technical')->setName('error_technical');
-$app->get('/thank/{hotel}/{lang}/{bookingId}/{hash}', \HotelController::class . ':thank')->setName('thank');
+$app->get('/thank/{hotel}/{lang}', \HotelController::class . ':thank')->setName('thank');
+$app->get('/widget/{hotel}/{lang}/load', \WidgetController::class . ':load')->setName('widget_load');
+$app->get('/widget/{hotel}/css', \WidgetController::class . ':css')->setName('widget_css');
 $app->get('/', \HomeController::class . ':home');

@@ -22,7 +22,7 @@
             <span class="snop-bold-value"><?php echo $search['childrenCount']; ?></span>
         </div>
         <div class=" col">
-            <a href="<?php echo snop_url('search'); ?>"><?php echo __('Change'); ?></a>
+            <a href="<?php echo snop_url('search'); ?>" class="snop-process-html" data-step="search"><?php echo __('Change'); ?></a>
         </div>
     </nav>
 
@@ -48,7 +48,7 @@
                 </p>
             </div>
             <div class="card-footer">
-                <a href="<?php echo snop_url('roombook', ['key' => $key]); ?>" class="btn btn-primary">Book now!</a>
+                <a href="<?php echo snop_url('roombook', ['key' => $key]); ?>" class="btn btn-primary snop-process-html" data-ajax="link">Book now!</a>
             </div>
         </div>
 

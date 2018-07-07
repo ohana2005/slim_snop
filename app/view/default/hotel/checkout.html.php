@@ -23,7 +23,7 @@
             <span class="snop-bold-value"><?php echo $search['childrenCount']; ?></span>
         </div>
         <div class=" col">
-            <a href="<?php echo snop_url('rooms'); ?>"><?php echo __('Back to rooms'); ?></a>
+            <a href="<?php echo snop_url('rooms'); ?>" class="snop-process-html" data-step="rooms"><?php echo __('Back to rooms'); ?></a>
         </div>
     </nav>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -40,7 +40,7 @@
         </div>
     </nav>
 
-    <form method="post" action="<?php echo snop_url('checkout'); ?>">
+    <form method="post" action="<?php echo snop_url('checkout'); ?>" class="snop-process-html" data-ajax="form">
         <div class="form-group">
             <label for="exampleName"><?php echo __('Your name'); ?></label>
             <input type="text" name="order[name]" class="form-control" id="exampleName" placeholder="<?php echo __('Your name') ?>" required >

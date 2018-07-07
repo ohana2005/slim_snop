@@ -10,6 +10,8 @@ class ServiceService extends BaseService
 {
     public function init($args){
         $this->container['hotel']->init($args['hotel']);
-        $this->container['i18n']->init($args['lang']);
+        if(!empty($args['lang'])) {
+            $this->container['i18n']->init($args['lang']);
+        }
     }
 }
