@@ -40,7 +40,7 @@
         </div>
     </nav>
 
-    <form method="post" action="<?php echo snop_url('checkout'); ?>" class="snop-process-html" data-ajax="form">
+    <form method="post" action="<?php echo snop_url('checkout'); ?>" class="snop-process-html" data-ajax="form" id="snop_checkout_form">
         <div class="form-group">
             <label for="exampleName"><?php echo __('Your name'); ?></label>
             <input type="text" name="order[name]" class="form-control" id="exampleName" placeholder="<?php echo __('Your name') ?>" required >
@@ -59,6 +59,7 @@
             <textarea class="form-control" name="order[wish]" id="exampleFormControlTextarea1" rows="3"></textarea>
         </div>
         <button type="submit" class="btn btn-success btn-lg"><?php echo __('Book now'); ?></button>
+        <button type="submit" class="btn btn-primary btn-lg" name="order[payment]" value="1" id="snop_booking_payment"><?php echo __('Book and Pay'); ?></button>
     </form>
 
 

@@ -18,4 +18,11 @@ class BaseService
     public function db(){
         return $this->container['db'];
     }
+
+    protected function generateUrl($name, $full = false)
+    {
+        $lang = $this->container['i18n']->getLang();
+        $slug = $this->container['hotel']->getHotelSlug();
+        return ($full ? '//' . $_SERVER['HTTP_HOST'] : '') . $this->container->get('router')->pathFor($name, ['hotel' => $slug, 'lang' => $lang]);
+    }
 }
