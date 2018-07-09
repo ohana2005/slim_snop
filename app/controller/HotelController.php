@@ -51,7 +51,14 @@ class HotelController extends BaseController
         $this->container['service']->init($args);
         $responseData = $this->container['order']->create($_POST['order']);
         if($responseData['type'] == 'success'){
-            return $this->snopGoTo($response, 'thank', $args, ['hash' => $responseData['bookingHash'], 'bookingId' => $responseData['bookingId']]);
+            if(!empty($_POST['order']['payment'])){
+                $Booking = $this->container['hotel']->getBooking($responseData['bookingId'], $responseData['bookingHash']);
+                $responsePayment = $this->container['api']->payBooking($Booking);
+                $this->container['api']->updateBookingStatus($Booking, 'pending');
+                return $this->snopRedirectTo($response, PAYMENT_HOST . '/transaction/' . $responsePayment['transactionId'] . '/' . $responsePayment['transactionHash']);
+            }else {
+                return $this->snopGoTo($response, 'thank', $args, ['hash' => $responseData['bookingHash'], 'bookingId' => $responseData['bookingId']]);
+            }
         }else{
             if($responseData['errorcode'] == 2){
                 return $this->snopGoTo($response, 'error_occupied', $args);
@@ -74,6 +81,17 @@ class HotelController extends BaseController
         ]);
     }
 
+    protected function snopRedirectTo($response, $url){
+        if($this->isWidget()){
+            return $response->withStatus(200)
+                ->withHeader('Content-Type', 'application/json')
+                ->write(json_encode([
+                    'redirect' => $url
+                ]));
+        }else{
+            return $response->withRedirect($url);
+        }
+    }
 
     protected function snopGoTo($response, $step, $args, $params = []){
         if($this->isWidget()){

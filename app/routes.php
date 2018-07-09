@@ -11,4 +11,7 @@ $app->get('/error/technical/{hotel}/{lang}', \ErrorController::class . ':technic
 $app->get('/thank/{hotel}/{lang}', \HotelController::class . ':thank')->setName('thank');
 $app->get('/widget/{hotel}/{lang}/load', \WidgetController::class . ':load')->setName('widget_load');
 $app->get('/widget/{hotel}/css', \WidgetController::class . ':css')->setName('widget_css');
+$app->get('/payment/{hotel}/{lang}/success', \PaymentController::class . ':success')->setName('payment_success');
+$app->get('/payment/{hotel}/{lang}/cancel', \PaymentController::class . ':cancel')->setName('payment_cancel');
+$app->get('/payment/{hotel}/{lang}/failure', \PaymentController::class . ':failure')->setName('payment_failure');
 $app->get('/', \HomeController::class . ':home');

@@ -129,8 +129,10 @@ SnopWidget = {
         if(typeof json != 'object'){
             json = $.parseJSON(json);
         }
-        if(json.step){
+        if(json.step) {
             this.goTo(json.step, json.params);
+        }else if(json.redirect){
+            document.location.href = json.redirect;
         }else if(json.error){
             alert(json.error);
         }
@@ -244,6 +246,13 @@ SnopWidget = {
             $('#snop_link_search').click(function(){
                _this.goTo('search');
                return false;
+            });
+        },
+        checkout: function(_this, resp){
+            SnopBooking.init_checkout();
+
+            $('#snop_booking_payment').click(function(){
+               $('#snop_checkout_form').append("<input type='hidden' name='order[payment]' value='1' >");
             });
         }
     }
