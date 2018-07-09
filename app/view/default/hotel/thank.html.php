@@ -43,3 +43,8 @@
 
     </tbody>
 </table>
+<?php if($booking['payment_status'] != 'paid'): ?>
+    <a href="<?php echo snop_url('pay_booking'); ?>?bookingId=<?php echo $booking['id']; ?>&hash=<?php echo $booking['hash']; ?>" class="btn btn-primary btn-lg"><?php echo __('Pay now!'); ?></a>
+    <?php else: ?>
+    <span class="badge badge-warning price-badge"><?php echo __('Paid!'); ?></span>
+<?php endif; ?>

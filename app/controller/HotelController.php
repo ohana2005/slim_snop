@@ -54,6 +54,10 @@ class HotelController extends BaseController
             if(!empty($_POST['order']['payment'])){
                 $Booking = $this->container['hotel']->getBooking($responseData['bookingId'], $responseData['bookingHash']);
                 $responsePayment = $this->container['api']->payBooking($Booking);
+                if($responsePayment['type'] == 'error'){
+                    echo $responsePayment['message'];
+                    die;
+                }
                 $this->container['api']->updateBookingStatus($Booking, 'pending');
                 return $this->snopRedirectTo($response, PAYMENT_HOST . '/transaction/' . $responsePayment['transactionId'] . '/' . $responsePayment['transactionHash']);
             }else {
@@ -79,6 +83,22 @@ class HotelController extends BaseController
             'hotel' => $this->container['hotel']->getHotel(),
             'booking' => $Booking
         ]);
+    }
+
+
+    public function payBooking($request, $response, $args){
+        $this->container['service']->init($args);
+        $Booking = $this->container['hotel']->getBooking($_GET['bookingId'], $_GET['hash']);
+        if(!$Booking){
+            return $response->withRedirect($this->container->get('router')->pathFor('error_technical', $args));
+        }
+        $responsePayment = $this->container['api']->payBooking($Booking);
+        if($responsePayment['type'] == 'error'){
+            echo $responsePayment['message'];
+            die;
+        }
+        $this->container['api']->updateBookingStatus($Booking, 'pending');
+        return $this->snopRedirectTo($response, PAYMENT_HOST . '/transaction/' . $responsePayment['transactionId'] . '/' . $responsePayment['transactionHash']);
     }
 
     protected function snopRedirectTo($response, $url){
