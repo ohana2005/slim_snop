@@ -98,23 +98,46 @@ class HtmlService extends BaseService
         return $strcss;
     }
 
-    public function getLessc(){
-        if(!$this->lessc){
-            $this->lessc = new lessc();
-        }
-        return $this->lessc;
-    }
-
-    public function wrapCss($css){
-        $css = ".snop-booking-body{\n" . $css . "\n }";
-        return $this->getLessc()->compile($css);
-    }
 
     public function makeFilenameCss($widget = false){
-        return ($widget ? 'widget_' : '') . sha1(md5($this->container['hotel']->getHotelId())) . '.css';
+        $str_modified = "";
+        foreach($this->getBaseCss() as $path) {
+            $fullpath = PUBLIC_DIR . $path;
+            if(file_exists($fullpath)){
+                $modified = filemtime($fullpath);
+                $str_modified .= $modified;
+            }
+        }
+        $skin = $this->container['hotel']->getSkin();
+        $skinpath = PUBLIC_DIR . "/skin/$skin/skin.css";
+        if(file_exists($skinpath)){
+            $modified = filemtime($skinpath);
+            $str_modified .= $modified;
+        }
+        $str_modified .= $this->container['hotel']->getConfigModified('css');
+        $filename = sha1($str_modified);
+        if($widget){
+            $filename = 'widget_' . $filename;
+        }
+        $filename = $this->container['hotel']->getHotelId() . '_' . $filename;
+
+        return $filename . '.css';
     }
 
     public function makeFilenameJs($widget = false){
-        return ($widget ? 'widget_' : '') . sha1(sha1(md5($this->container['hotel']->getHotelId()))) . '.js';
+        $str_modified = "";
+        foreach($this->getBaseJs() as $path){
+            $fullpath = PUBLIC_DIR . $path;
+            if(file_exists($fullpath)){
+                $modified = filemtime($fullpath);
+                $str_modified .= $modified;
+            }
+        }
+        $filename = sha1($str_modified);
+        if($widget){
+            $filename = 'widget_' . $filename;
+        }
+        $filename = $this->container['hotel']->getHotelId() . '_' . $filename;
+        return $filename . '.js';
     }
 }

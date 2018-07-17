@@ -32,7 +32,13 @@ class HotelService extends BaseService
         if(!$this->_config){
             $this->readConfig();
         }
-        return isset($this->_config[$name]) ? $this->_config[$name] : $default;
+        return isset($this->_config[$name]) ? $this->_config[$name][0] : $default;
+    }
+    public function getConfigModified($name){
+        if(!$this->_config){
+            $this->readConfig();
+        }
+        return isset($this->_config[$name]) ? $this->_config[$name][1] : date('Y-m-d H:i:s');
     }
 
     public function getSkin() {
@@ -58,14 +64,14 @@ class HotelService extends BaseService
         $arr = array();
         $stmt = $this->db()->query("SELECT * FROM `hotel_config` WHERE  `hotel_id` = {$this->_hotelId}");
         while ($row = $stmt->fetch()) {
+            $val = [$row['value'], $row['updated_at']];
             switch ($row['datatype']) {
                 case 'enum':
-                    list(, $arr[$row['keyname']]) = explode("::", $row['value']);
-                    break;
-                default:
-                    $arr[$row['keyname']] = $row['value'];
+                    list(, $val) = explode("::", $row['value']);
+                    $val  = [$val, $row['updated_at']];
                     break;
             }
+            $arr[$row['keyname']] = $val;
         }
         $this->_config = $arr;
     }
