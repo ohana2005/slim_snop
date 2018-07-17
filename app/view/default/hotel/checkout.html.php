@@ -2,40 +2,40 @@
 <div class="container">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class=" col">
+        <div class=" col col-6 col-sm-4 col-md-2">
             <span><?php echo __('Arrival'); ?></span>:
             <span class="snop-bold-value"><?php echo $search['dateArrival']; ?></span>
         </div>
-        <div class=" col">
+        <div class=" col col-6 col-sm-4 col-md-2">
             <span><?php echo __('Departure'); ?></span>:
             <span class="snop-bold-value"><?php echo $search['dateDeparture']; ?></span>
         </div>
-        <div class=" col">
+        <div class=" col col-6 col-sm-4 col-md-2">
             <span><?php echo __('Nights'); ?></span>:
             <span class="snop-bold-value"><?php echo $search['nights']; ?></span>
         </div>
-        <div class=" col">
+        <div class=" col col-6 col-sm-4 col-md-2">
             <span><?php echo __('Adults'); ?></span>:
             <span class="snop-bold-value"><?php echo $search['adultsCount']; ?></span>
         </div>
-        <div class=" col">
+        <div class=" col col-6 col-sm-4 col-md-2">
             <span><?php echo __('Children'); ?></span>:
             <span class="snop-bold-value"><?php echo $search['childrenCount']; ?></span>
         </div>
-        <div class=" col">
+        <div class=" col col-6 col-sm-4 col-md-2">
             <a href="<?php echo snop_url('rooms'); ?>" class="snop-process-html" data-step="rooms"><?php echo __('Back to rooms'); ?></a>
         </div>
     </nav>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class=" col">
+        <div class=" col col-6 col-md-4">
             <i class="fa fa-building"></i>
             <?php echo $order['room']['name']; ?>
         </div>
-        <div class=" col">
+        <div class=" col col-6 col-md-4">
             <i class="fa fa-beer"></i>
             <?php echo $order['package']['name']; ?>
         </div>
-        <div class=" col">
+        <div class=" col col-12 col-md-4" style="padding-top: 10px; text-align: right">
             <span class="badge badge-warning price-badge"><?php echo price($order['price']['price']); ?></span>
         </div>
     </nav>

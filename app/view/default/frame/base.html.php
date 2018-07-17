@@ -24,7 +24,7 @@
         <div class="col text-muted"><h2><?php echo cnfg('hotel_name') ?></h2></div>
     </div>
     <?php echo $content; ?>
-
+    <div class="footer-pad" style="height: 50px;"></div>
 
 </main><!-- /.container -->
 <footer class="footer">
